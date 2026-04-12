@@ -1,0 +1,715 @@
+skip-grant-table nei config di sql da xampp
+
+# The MySQL server
+default-character-set=utf8mb4
+[mysqld]
+skip-grant-table
+port=3306
+socket="C:/xampp/mysql/mysql.sock"
+basedir="C:/xampp/mysql"
+tmpdir="C:/xampp/tmp"
+datadir="C:/xampp/mysql/data"
+pid_file="mysql.pid"
+# enable-named-pipe
+key_buffer=16M
+max_allowed_packet=1M
+sort_buffer_size=512K
+net_buffer_length=8K
+read_buffer_size=256K
+read_rnd_buffer_size=512K
+myisam_sort_buffer_size=8M
+log_error="mysql_error.log"
+
+poi apriamo la cartella di wordpress da localhost
+
+aruba ed ergonet sono host per siti (ie con aruba confronta hosting linux e hosting wp=>linux + db.
+se il db lo faccio io risparmio un po, tutto qua)
+
+Se apro la cartella wp ottengo:
+
+    "Ti diamo il benvenuto in WordPress. Prima di iniziare, devi conoscere i seguenti dati.
+
+    Nome del database
+    Nome utente del database
+    Password del database
+    Host del database
+    Prefisso tabelle (se desideri eseguire più WordPress con un solo database)
+    Queste informazioni sono utilizzate per creare il file wp-config.php. 
+    Se per qualsiasi motivo la creazione automatica del file non va a buon fine, non ti preoccupare. 
+    Questo passaggio non fa altro che inserire le informazioni del database in un file di configurazione. 
+    Puoi aprire wp-config-sample.php in un editor di testo, inserire i tuoi dati e salvarlo come wp-config.php. 
+    Serve ancora aiuto? Leggi l'articolo di supporto su wp-config.php.
+
+    Con ogni probabilità, queste informazioni ti sono state già fornite dal tuo fornitore di hosting. 
+    Se non disponi di queste informazioni, dovrai contattarlo prima di poter proseguire. 
+    Se invece è tutto pronto…
+
+    Iniziamo!"
+
+! Vedi come funziona FileZilla
+
+Torniamo a wp aperto in localhost:
+    -nome db quello che ho appena creato su phpMyAdmin,
+    -nome utente root,
+    -pw vuota,
+    -host metto localhost a meno che il provider non mi dia un altro valore,
+    -prefisso tabella è il campo che wp usa per identificare le tabelle all'interno del suo db;
+     wp_ è lo standard ma è vittima di sql_injection, metto un mini-codice diverso e la injection è
+    più difficile. è solo una minima misura di sicurezza (messo dn_)
+
+Se vado avanti ottengo:
+    Ottimo lavoro! Hai completato questa parte dell'installazione. Ora WordPress può comunicare con il database. 
+    Se è tutto pronto…
+
+    Avvia l'installazione
+
+Dopodichè mettiamo:
+    -nome del sito (si cambia senza problemi dalle impostazioni): messo semplicemente 'il mio sito'
+    -nome utente: Dennis
+    -pw: LS4LWVHaKe7J2&7mli
+    -mail: dennisrexhepi@gmail.com (ma il recupero pw non funziona, quindi occhio)
+    -ultima spunta blocca o meno l'indicizzazione del sito dal motore di ricerca
+
+Infine clicco Installa
+
+Torno su phpMyAdmin e vedo che wp ha creato delle tabelle nel database che gli ho fornito prima
+
+Torno sul localhost di WordPress, accedo e arrivo nella Bacheca di WordPress (finally)
+
+Dato che WordPress è open source, se appare un aggiornamento è meglio farlo
+
+Approfondisci il versionamento 
+(ie v1.0.1; più mi sposto a sx più l'aggiornamento è importante ed è meglio fare un backup)
+
+Plugin suggerito per backup: Duplicator (free con opzione di pagamento)
+
+Nella sezione Impostazioni trovo alcune delle sezioni da modificare eventualmente citate prima.
+
+Una cosa da modificare è: 
+    -Impostazioni -> Discussione -> disattiva 'Permetti l'invio di commenti per i nuovi articoli'
+Reduce di quando WordPress era pensato solo quando faceva girare solo blog (banalmente è una misura contro gli spam)
+
+Su: Impostazioni -> Permalink -> Struttura dei permalink: vado a selezionare Nome articolo al posto di semplice.
+
+WordPress può avere problemi dopo il caricamento di nuovi contenuti nell pagine, se vado sempre su permalink e salvo di 
+nuovo non mi da errore
+
+In Plugin, trovo Hello Dolly, un minimo plugin funzionante.
+
+!Se cancello un plugin dalla cartella, lo cancello anche da WordPress e viceversa.
+
+Il Tema è il responsabile della grafica del sito, ma oggigiorno è più in mano a noi 
+(stesso discorso dei plugin; se aggiungo o tolgo cartelle lo vedo anche dalla bacheca di WordPress)
+
+teamforest.net è il riferimento per temi di WordPress a pagamento (sempre comunque ragionevoli, acquisto una tantum)
+
+Presta attenzione 
+    -alle recensioni di un tema
+    -verifica se è vivo o morto (può essere che i vecchi temi non funzionino più post aggiornamento di WordPress)
+     Come faccio: 
+        1)guardo il numero di vendite (più è alto più è probabile che sia vivo)
+        2)ultima data di aggiornamento (più è recente meglio è, 6 mesi è borderline, oltre evita)
+        3)quando è stato creato (in concomitanza col punto 2)
+        4)guarda le demo per vedere cosa il tema è in grado di fare
+
+
+Con un tema a pagamento sono vincolato al suo team di sviluppo, se lo faccio io sono vincolato solo alla mia voglia
+
+Sezione articoli, apro l'articolo di default Ciao Mondo e mi si apre l'editor dell'articolo.
+
+Stiamo vedendo la barra di destra dell'editor, unica cosa da ricordare è lo slug, cioè l'url della pagina
+E' fortemente consigliato modificarlo prima della pubblicazione, perchè dopo devo comunicare al motore di
+ricerca il cambiamento della pagina. Un casino. Non farlo. Grazie.
+
+La libreria Media a differenza di plugin o temi, non è legata alla cartella di WordPress, almeno direttamente
+Ad esempio se carico un'immagine piccola la vedo in cartella, ma se carico un'immagine pesante da WordPress 
+nella cartella mi appaiono una serie di immagini con diverse risoluzioni. 
+Se cancello da cartella non mi cancella dal Media di WordPress, ma è vero il contrario:
+se cancello da Media di WordPress allora cancella tutti i file dalla cartella.
+
+Nota: il tema o immagini non modificano il database mentre i plugin si
+
+I plugin del repo di WordPress sono gratis, i plugin fuori dal repo di WordPress sono a pagamento
+Spesso nel repo mettono una versione freemium con alcune funzionalità bloccate, con link al sito del team del plugin
+dove puoi comprare il plugin ad un tasso annuale
+
+!!!!
+    metatitle, metadescription, solo 1 h1, rispettare l'ordine degli h, dimensione del sito, link che re-indicizzano a
+    siti autorevoli, e tanti altri parametri conosciuti e sconosciuti influiscono sulla SEO 
+!!!!
+
+
+
+!!!!!!!!!!!!!!!
+
+        http://localhost/test-prog/Wordpress/wp-admin/ per accedere alla bacheca
+
+!!!!!!!!!!!!!!!
+
+
+Ultimo plugin da vedere è sulla sicurezza informatica
+
+Solo i siti vetrina sono esenti dal protocollo https, poichè devono solo mostrare contenuti; tuttavia google da un po'
+di tempo comincia a mettere comunque un etichetta 'non sicuro' se usi ancora il protocollo http (senza la s)
+
+Con Local posso emettere un certificato ssl spuntando un opzione, da xampp non posso farlo
+! Let's Encrypt è gratuito e mi può emettere certificati ssl (spesso incluso nel pacchetto hosting)
+Per verificarlo dal pannello di hosting, vedo se ho una spunta da abilitare; porta via massimo pochi minuti.
+Fatto questo, se digito https://nomesito viene un'icona della chiave; se non è ancora abilitato sbuca un popup rosso
+
+Il plugin in questione è:
+    -Really Simple Security – Simple and Performant Security (formerly Really Simple SSL)
+
+Altra opzione che si può abilitare è il 'Riparatore di contenuti misti' nella sez SSL del plugin:
+Se ho una cartella con link al protocollo in http e https, il riparatore ripara le sorgenti e trasmette tutto in https
+Nella sezione 'Hardening' abilito una serie di opzioni per rendere 'la vita più difficile ad un hacker'
+
+Invece il plugin 'Wordfence Security' aggiunge più opzioni di sicurezza, Andrea spesso non lo installa perchè è molto pesante
+Lo scarico se vedo un traffico anomalo, molti accessi falliti o tentativi di breach.
+Mi da ad esempio tempo di blocco e blocco dopo tot di tentativi falliti, ma anche scansione della cartella di Wordpress,
+per impedire backdoor degli hacker (confronta i file sorgente attuali con quelli nativi ed eventualmente segnala differenze)
+
+Altri eventuali plugin utili sono di ottimizzazione/cache:
+
+    -Autoptimize comprime il codice (ma io continuo a scrivere normalmente con spazi e indentature) 
+     Se sto lavorando non lo abilito perchè altrimenti peggioro notevolmente la lettura del codice da browser. 
+     Abilitalo alla fine a lavoro compiuto prima di mettere online il sito.
+     L'obbiettivo nella configurazione è spuntare più voci possibili, ma probabilmente il sito non funzionerà a causa di conflitti 
+     con ad esempio altri plugin. Pian piano de-spunto e vedo qual'è quella che mi da problemi. 
+     ->Un continuo tira e molla fino ad arrivare ad un equilibrio 
+     (di solito danno probllemi css e js a causa di dipendenze dell'ordine, esempio chiamata di funzione prima di dichiararla 
+     per js e nel css ho regole a cascata)
+     Altra fase della configurazione è il Lazyload delle immagini (le carica se c'è bisogno); Guthemberg (nativo di Wordpress)
+     lo fa in automatico e non serve abilitarlo, ma altri editor potrebbero non farlo
+    
+    -Performance Lab è una sorta di raccolta di plugin e funzionalità
+     Uno dei suoi usi è il 'Modern Image Format': la codifica .webp e .avif risparmiano spazio per la codifica delle 
+     immagini, ma hanno una copertura limitata: essendo recente, non è detto che tutti i dispositivi abbiano software o 
+     aggiornamenti in grado di leggere questi formati, di solito 9/10 leggono queste codifiche.
+     Il plugin mi permette di caricare foto in .jpeg o .img e vede se il dispositivo è in grado di leggere un .webp: se si 
+     gliela converte, altrimenti gli manda l'originale in .jpeg/.img
+
+    -WP Fastest Cache è il più semplice per la cache
+
+    -W3 Total Cache è molto più lungo da configurare
+
+
+Torniamo sull'editor -> Nuovo articolo (non mi interessa il nome perchè tanto non lo salvo per la prova fatta in classe)
+E' buona norma fare prima uno schema della pagina da visualizzare prima di mettere mano su Wordpress.
+
+
+!!!!!!
+
+        Se mi da fastidio la libreria grafica se uso xampp vado in config -> php.ini -> cerco gd facendo ctrl + f e poi davanti a 
+        extension = gd tolgo il ;
+
+!!!!!!
+
+!!!!!!
+
+    Oltre a Gutemberg come editor di wp, c'è anche Divi (dalla lezione di secure coding)
+
+!!!!!!
+
+
+Elementor è un plugin che sostituisce l'editor nativo; anche lui usa blocchi e stessa interfaccia. Versione gratuita limitata e gli 
+manca un meccanismo 'peculiare' di Guthemberg: fa un css unico invece di fare tanti mini css per ogni pagina web. (verifica l'informazione)
+
+Parentei sui template:
+Pagina 404 e 2 url diversi sbagliati: la pagina 404 è il template(modello standard della macchina), due url inesistenti sono 2 pagine 
+diverse ma che fanno riferimento sempre allo stesso template (le mie richieste di optional della macchhina)
+Il template decide dove mttere il titolo, ma può non farlo e possiamo metterlo a mano 
+
+Occhio a distinguere bene tra Template (elementi che si ripetono tra le varie pagine) e Contenuto
+
+(tabella gerarchia dei template)
+
+Homepage vuole un template a parte (banalmente non voglio il titolo)
+
+blocco contenitore:
+riassunto:
+3 file principali:
+    index.js dentro src, index.php(lato server che comunica a wp che ho informaz per gutenberg; gli dico: registra il blocco comunicato dal
+    block.json nella sua posizione) e block.json(contiene tutte le info ddel blocco) dentro il mio blocco sono gli unici obbligatori 
+    asset sono facoltativi(css o immagini utili)
+
+poi faccio npm init per compilare il mio blocco in js puro con wp scripts
+
+ora appare package.json dove ho le indicazioni per node per la compilazione (run e start, le dipendenze per wp scripts le ottengo con
+    npm install --save-dev @wordpress/scripts)
+
+ora npm build dove mi esce una cartella con un file js e a volte una cartella con index.asset.php
+nella pic di andrea solo i file verdi vengono caricati, package.json e index.js non occorre caricarli
+
+inizializziamo insieme
+index.php
+    1-  add action ('init', funzione creata/richiamata() {
+            register_block_type(__DIR__); (__DIR__ mi indica il percorso verso il nostro block.json; dir indica la stessa cartella, se è
+            in una sottocartella faccio __DIR__ e concateno col punto la sottocartella)
+        });
+
+        defined('ABSPATH') || exit; è un controllo che impedisce l'esecuzione del file se lo si accede in maniera diretta
+
+
+block.json
+    è complicato, spesso lo compiuto
+    {
+    "schema": "https://schemas.wp.org/trunk/plugin.json",
+    "apiVersion": 3,
+    "title": "Blocco Griglia",
+    "name": "blocks/cer-grid", (non mettere spazi o underscore, solo trattini al massimo)
+    }
+
+    gli unici obbligatori, posso aggiungere:
+
+    "description": "descrizione che appare nel pannello blocchi di wp. in questo caso mettiamo cescot-blocks",
+
+    "category": "una delle cat di wp. text, media,design,widgets,themes,embed. 
+        se voglio una mia cat devo richiamare le cat, aggiungerla e poi ridarla"
+    
+    "icon": "icone di wp, guarda il loro sito."
+
+    "textdomain": "nome file" si occupa delle tarduzioni
+
+    "editorScript": "file:./build/index.js" posso farlo anche in php ma cosi è più semplice e veloce.
+    ha il percorso a partire della cartella del block.js fino al file indicato che esisterà dopo la prima compilazione
+
+    "viewScript": "file:./assets/js/scripts.js" mi carica un js visibile solo in frontend (ie mi fa partire l'animazione di un carosello da gutenberg o importare una lib
+    i.e. Glide)
+
+    "editorStyle" : "file:./assets/css/style.css",
+
+    "style":[
+        "file:./assets/css/style.css",
+        "file:./assets/css/style-2.css"
+    ],
+
+    "supports":{
+        "anchor": true,
+        "align": true,
+        "color": {
+            "background": true,
+            "text": true,
+            "link":true
+        },
+        "spacing": {
+            "margin": true,
+            "padding": true,
+            "blockGap": true
+        }
+    }
+
+ora apro la cartella del blocco in termminale integrato
+
+1-npm init (mi crea il package.json e ha bisogno di alcune info)
+
+1.1 (Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser  => da terminale integrato se non gira subito)
+
+2 esce
+    This utility will walk you through creating a package.json file.
+    It only covers the most common items, and tries to guess sensible defaults.
+
+    See `npm help init` for definitive documentation on these fields
+    and exactly what they do.
+
+    Use `npm install <pkg>` afterwards to install a package and
+    save it as a dependency in the package.json file.
+
+    Press ^C at any time to quit.
+
+  ora mi fa vedere delle cose che posso compilare, le fondamentali sono:
+  "entry point: (index.js) build/index.js" build/index.js deve essere lo stesso dell'editorScript nel file block.json
+  "test command" sono dei comandi di test per software, se faccio una componente per software esterno lo lascio vuoto e lo facico dopo a mano
+  "license" se faccio qualcosa per me chissene frega ,ma se voglio far pubblicare il plugin devo almeno usare la GPL 2 o superiore
+  "type" devo scrivere module, lo posso anche modificare nel package appena creato
+
+3 vado nel package creato e in "scripts" tolgo "test" e metto:
+    "scripts": {
+    "start": "wp-scripts start",
+    "build": "wp-scripts build"
+  }
+
+  mi accede ai comandi npm start e npm run build per il pacchetto ottimizzato
+
+4 scrivo 
+    npm install --save-dev @wordpress/scripts 
+
+  crea node_modules da aggiungere in .gitignore
+  (vedi pnpm per la velocità)
+
+5 mi aggiungerà al mio package una voce "devDependences" aka dipendenze di un pacchetto per funzionare correttamente
+
+6 mi crea anche package-lock.json (tutte le sottodipendenze) Questo posso caricarlo nel repo se voglio, dipende da come voglio
+  gestire i pacchetti. "qui funziona, la no" per evitare questo meglio caricare il lock e passa la paura
+
+  file lungo ma è solo testo quindi non è troppo pesante
+
+7 npm start (forse anche run build vedi bene)
+
+8 apro index.js
+    prima cosa registro il blocco con registerBlockType
+
+    includo la sua lib: import {registerBlockType} from '@wordpress/blocks';
+    (è una sottodipendenza in wp-element)
+
+    apri in un js per visualizzare bene i commenti
+
+    registerBlockType(blockMeta.name, /*prende il nome del blocco dal file block.json*/ {
+            title: blockMeta.title,
+            description: blockMeta.description,
+            category: blockMeta.category,
+            icon: blockMeta.icon,
+            edit: (props) =>{
+                const blockProps= = useBlockProps() per sfruttare le funzionalità native di wp
+                return <div {...blockProps}> dicitura che mi dice di aggiugere quelle funzionalità senza sovrascrivere ciò che scrivo
+                    <InnerBlocks />
+                </div>
+            },
+            /*funzione freccia
+            posso fare anche un file edit.js e save.js e le importo; 
+            magari fallo solo se sono molto lunghi*/
+            //codice che viene eseguito fichè lavoro nel blocco
+
+            /*esempio di argomento dentro le garffe di edit
+                const date=new Date();
+                return <span>{date.toString()}</span>
+                */
+            save: (props) =>{
+                    return <div {...blockProps}> 
+                        <InnerBlocks.Content />
+                    </div>
+            }
+            //codice che viene eseguito quando pigio salva, entrambe devono aver eun return. il return deve avere solo 1 tag
+            //InnerBlocks permette di inserire altri blocchi dentro questo blocco ma posso usarlo solo una volta
+        }
+
+    )
+
+    Ora ho un blocco contenitore di blocchi (perché ho lasciato solo InnerBlocks), dopo lo vado ad aggiornare.
+    
+
+    !!!Ricorda di includerlo in my-block-library.php!!!
+
+
+9 Per personalizzare un blocco ho bisogno degli Elementi da impostare
+    scrivo gli attributes e ho un oggetto (ie columns) con i vari attributi
+    ogni attributo ha un type e un default
+    attributes:{
+            "columns":{
+                "type": "number",
+                "default": 3
+            }},
+    nel return metto un tag vuoto con dentro il resto perchè return ritorna solo 1 elemento
+
+    
+    Per farlo apparire nella barra laterale di destra
+
+    <InspectorControls key="settings">
+                    
+        </InspectorControls> 
+    E devo anche importarlo in alto al index.js
+    
+    Devo importare i seguenti componenti:
+    import{PanelBody, RangeControl} from '@wordpress/components';
+    tra le varie opzioni ho:
+
+    <InspectorControls key="settings">
+                    <PanelBody title="Grid settings">
+                        <RangeControl
+                            label="numero di colonne"
+                            value={props.attributes.columns} (valore che devo manipolare)
+                            onChange={
+                                (columns) => {props.setAttributes({columns : newColumns})}
+                            }
+                            />
+                    </PanelBody>
+
+                </InspectorControls>
+    !Non devo importare setAttributes, è nativo.
+    in onChange{(valore)} al posto di valore posso fare anche calcoli
+
+    Dopo onChange metto i valori del mio RangeControl di default:
+        min={1}
+        max={12} (metto 12 poichè è uno dei primi numeri con più divisori , 2-3-4-6)
+        step={1} metto i 'salti' che il valore di colonne deve fare
+        withInputField={true} mostra o meno il campo numerico accanto, con false ha solo il range che scorre
+        marks={true} mostra gli intervalli (trattini spezzettati); con true li prende in auto 
+    
+    Finora ho settato l'attributo, adesso lo uso:
+    creo un css dentro cartella asset, ho la classe fornita da wp quindi la sfrutto e uso una variabile css che posso manipolare da js.
+    dentro index.js con useBlockProps gli dico stile e incollo cio che ho nel css
+        const blockProps=useBlockProps({
+                style: {
+                    '--cer-grid--columns': props.attributes.columns
+                }
+                }); (prima useBlockProps era vuoto)
+                idem anche nel save
+    
+    Ora prova a rendere la grid responsive
+    mettiamo le varianti di desktop, tablet e telefono
+
+    guarda ciò che ha fatto andrea e controlla tutti i file di cer-grid
+    https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page
+
+Vediamo adesso un tab dei controlli, devo creare un componente dedicato che indipendentemente da ciò che gli metterò dentro mi restituisce
+(per ora 3) delle tab.
+
+Uso per partire il componente TabPanel di wp:
+
+                    <TabPanel 
+                        tabs={[
+                            {
+                                name: 'mobile', !Al nome dagli sempre qualcosa di minuscolo e senza spazi 
+                                title: 'Mobile'
+                            },
+                            {
+                                name:'tablet',
+                                title:'Tablet'
+                            },
+                            {
+                                name:'desktop',
+                                title:'Desktop'
+                            }
+                        ]}/>
+
+
+Dopo aver verificato dal file di andrea il motivo poer cui il blocco griglia non si apriva su wp, dobbiambo fare un componente nuovo 
+per la selezione dei colori, sfruttando ColorPalette, ColorPicker e un etichetta per la realizzazione del componente.
+
+
+! useSettings ritorna le impostazioni globali di wp, bisogna solo capire quale impostazione ci serve da mandarle come argomento 
+mi ritorna un array di impostazioni e devo richiedere quello con cardine 0 : [0]
+ora mi ridà 3 array :palette di default, base, eventuali custom ecc. 
+
+! il debug di react è penoso, per capire qualcosa stampa in console l'elemento dubbioso
+
+In ogni caso recupera tutto dal repo di andrea
+
+
+Altri editor rispetto a Gutemberg:
+Elementor: dal punto di vista pratico usa gli shortcodes (posso registrare anche i miei shortcodes e aggiungerli tra i blocchi dell'editor)
+    
+Visual composer: più leggero ma non vedo la preview. Simile a Gutemberg e con più funzionalità.
+    Ha i limiti di una versione gratuita
+
+Ora di piratare (ma legale, causa licenza GPL di wordpress)
+https://gpldl.com/premium-wordpress-woocommerce-for-free/
+comodo se ho 1 progetto o pochi, perchè devo scaricarlo manualmente ogni volta per ogni sito, se tengo su più siti ci sono abbonamenti
+mensili (tipo 37/mese)
+
+
+framework jQuery, come js ma più semplice(?)
+migliora l'interazione sul documento (ie getDocument, il listener)
+getElementById=> $('#id');
+byClassName=>$(".nome_classe);
+funzione per cercare dentro l'elemento find(".classe");
+aggiungo html ad un elemento:
+    lista.html("roba da aggiungere chiuso in tag"); (lista era una var già dichiarata)
+
+$('#id').find(".classe").html("roba da aggiungere chiuso in tag").addClass("nuova_Classe");
+tutte le funzioni ritornano l'elemento corrente 
+(sopra ho preso un elemento per id cercato una classe, aggiunto elemento html e aggiunto classe in più)
+
+
+tra le varie ia, GitHUB Copilot è il miglior servizio per la programmazione (oltre ad usare un altro editor chiamato antigravity)
+copilot permette di scegliere con quale ia interfacciarsi per la richiesta specifica che abbiamo
+ha vari modi di lavoro:
+    Ask: domanda e risposta
+    Edit: gli do il permesso di scrivere su i miei file e alla fine chiede conferma delle modifiche
+        (evita di fidarti alla cieca perchè può sbagliare)
+    Agent: itera più volte nella stessa richiesta e individua tutti i passaggi necessari per arrivare
+        alla soluzione (come prima ho perdita totale del controllo, contesto limitato alla cartella,
+        se esce chiede conferma per uscire o addirittura NON FARGLI ESEGUIRE COMANDI DA TERMINALE)
+più piccole e precise sono le richieste fatte, meglio lavora anche lui; serve strategia
+il flusso ideale è:
+    stabilire i prerequisiti/modelli
+    stabilire strategia
+    fagli scrivere in un readme tutto questo (cosi si ricorda il lavoro)
+    fagli fare piccoli passi
+
+Comodo per operazioni/refactor ripetitivi o per documentare bene il codice
+
+Ulteriore funzionalità: seleziona del codice e appare una lampadina a sx e ti aiuta a riscrivere, oppure
+tasto dx->spiega e apre nella chat una spiegazione
+
+React 
+
+
+Prova
+
+Partiamo dal principio:
+Nella prova ripartiremo da zero, ma non costruiremo tutto il sito.
+Dobbiamo fare un'analisi e da ciò che emerge facciamo il template della pagina (con header e footer) e poi una pagina vera e propria
+
+Aggiungere elementi:
+-Custom post type 
+modifico il file del tema: momentaneamente ci freghiamo di fare il tema child, modifichiamo direttamente il 2025.
+all'interno del function del tema aggiungiamo in wp-content, themes e tema corrente, modifico il file function:
+in fondo creamo una funzione per registrare il nostro custom post type:
+
+uso la funz di wp register_post_type. in fondo alle documentazioni di wp cerco i commenti e vedo degli esempi (wp developer resources)
+
+textdomainhere metterò li il dominio delle traduzioni (o lo trovo nello style css, aka uso direttamente quello del tema base)
+
+guarda sempre la documentazione ed esempi di documentazione se non ricordi, se usi ia alla cieca c'è rischio di allucinazioni
+
+function my_custom_post_type(){
+    register_post_type ('progetto', array(
+        "label" => array(
+            "name"=>"Progetti",
+            "singular_name"=>"Progetto"
+        ),
+        "public"=>true,
+        "hierarchical"=>false, //riguarda la gerarchia delle pagine (padre-figlio)
+        "exclude_from_search"=>false, //a meno che non voglio nascondere l'elemento o pagina, li lo metto vero 
+        "publicly_queryable"=>false, //solo gli utenti loggati possono vedere
+        "show_ui"=>true,
+        "show_in_menu"=>true, //metti tutto vero e passa la paura
+        "show_in_nav_menus"=>true,
+        "show_in_admin_bar"=>true,
+        "show_in_rest"=>true //fondamentale mettere true cosi che possa essere letto dalle api (causa react poichè Guthemberg lavora cosi)
+        //altre voci sono facoltative, puoi fare copia incolla dall'esempio della documentazione, tranne capability e quella sotto 
+        //in supports metti array con'title', 'editor', 'revisions', 'thumbnail', 'excerpt'(riassunto, se non lo metto mi mette il testo 
+        //intero tagliato), 'custom-fields'(per campi custom, tipo iscrizione all'albo dei medici). di default ho solo titolo ed editor
+        //in taxonomies o metto nell'array 'category' per avere stessa tax delle pagine oppure se voglio una mia oltre che registrare
+        //il blocco devo registrare anche la tax
+        //rewrite mi fa riscrivere il link, di default prende il nome del post (fermati ad incollare solo fino a qua)
+    ));
+    register_taxonomy('categoria_progetto', array(
+        "labels"=> array(
+            nome=> categoria
+            nome singolare=> categoria
+        ),
+        public true
+        hierarchical true
+        show_in_rest true come sopra 
+    )) se voglio una tassonomia custom, ma posso usare tranquillamente una nativa
+}
+
+aggancio la mia funzione alla funzione di inizializzazione delle procedure
+
+add_action('init','my_custom_post_type');
+
+all'interno della bacheca se ho fatto bene ho la voce progetti sotto articoli
+
+Advanced Custom Fields è un plugin (ma non farlo all'esame) che ti permette di fare tutto questo lavoro da interfaccia grafica invece che
+scrivere codice
+
+Ora passiamo alla creazione dei template: faccio il template del post type archive e del singolo progetto che apparirà nell'archivio
+
+aspetto-editor-template-aggiungi template- trovo archivio:progetto e elemento singolo:progetto che vedo solo se ho abilitato il show in rest 
+
+arrivato alla pagina metto in primis header, gruppo (con titolo del contenuto, no blocco titolo e contenuto) e footer. se ho messo immagine in 
+evidenza metto il blocco, se metto una tassonomia posso mettere il blocco della categoria
+
+blocco autore mette tutto compresa la bio, nome autore solo il nome, posso mettere la data dell'articolo
+
+nella pagina degli archivi invece faccio header, gruppo(titolo dell'archivio, query loop (con tipo di query: predefinito),
+ blocco riassunto, immagine in evid, nome autore, categoria, data pubbl ), footer
+
+
+!come esercizio prova a fare una pagina da archivio con head (logo sx, dx home, chi siamo, progetti, contatti), titolo dell'archivio, descrizione,
+query loop con 3 colonne e sotto foot con nome sito, privacy policy e cookie policy e icone social fb, ig e wa 
+
+come testare e gestire l'ottimizzazione di wp:
+
+-Google page speed: https://pagespeed.web.dev/
+Core Web Vitals per determinare se il sito è prestante: 3 metriche principali.
+
+! Vale solo da mobile, le stat da pc non contano nulla
+
+Le cause sono svariate, più in basso ho una diagnosi in tempo reale (mi interessa solo l'esperienza utente, le prestazioni servono solo a me
+per mettere le mani e ottimizzare. Lui usa volutamente un caso critico per dare i punteggi, fai l'hover sui parametri per capire meglio)
+Basta che sopra sia verde. Sotto mi riassume le criticità potenziali
+
+(domanda tipo: trova 2 problemi e come li potresti risolvere)
+
+Tra le ottimizzazioni da fare: 
+
+-Richieste di blocco del rendering : rendering bloccato da certi file (ie css di tutta la pagina quando da smartphone ho una pagina enorme. 
+Mi interessa il css solo della parte alta, del footer lo posso caricare dopo. tra i plugin che lo fanno sono critical css come wp rocket, wp compress)
+comunque serve un plugin qualunque esso sia che estragga il css critico da caricare
+
+-Utilizza durate della memorizzazione nella cache efficienti: uso la cache per velocizzare le ricerche. non serve fare richieste continue al db
+per una pagina che non varia più. Salvo una copia freezata della pagina lato client. Questo lavoro lo fa qualsivoglia plugin di cache e definire 
+il criterio di salvataggio di cache (spesso quelli non efficienti non sono nemmeno nostri, a volte sono di terze parti: su quest'ultimi non possiamo
+farci niente. Se sbuca un nostro problema butta un plugin)
+
+-Migliora il caricamento delle immagini: scegliere il miglior formato per le immagini (WebP, AVIF). L'unico problema loro è l'incopatibilità del 
+formato nei dispositivi vecchi (safari pre 2020).
+Soluzione: plugin che converte le immagini in WebP e che decide se darmi a seconda della versione del browser il file jpeg o WebP, 
+come WebP Express
+
+Oppure banalmente un immagine troppo grande: carico un immagine con dimensioni opportune (non metto una immagine 1920px se ho un buchetto da 400px)
+
+Layout shift: se non metto larghezza e altezza nel tag html rischio lo spostamento del layout quando si carica la pagina, con wp non ti devi 
+preoccupare perchè ha già di base il lazyload 
+
+-Albero delle dipendenze di rete: dipendenze di caricamento dei file, se ho una cascata (una dipendenza dopo l'altra) rischio di caricare molti 
+file prima di caricare ciò che voglio. 
+Anche qui ho plugin di ottimizzazione che accorpano i vari css e js in due unici file per pagina 
+(ci metto meno a caricare 1 file da 10mb che caricare 10 file da 1mb, perchè tra un file e l'altro ho la solito palleggio di domanda e risposta
+tra client e server)
+Spesso il problema è il font, quindi magari uso un font base per caricare la pagina e poi aggiorno il testo col font personalizzato a caricamento
+completato (non è ottimale rendere bloccante il caricamento di una pagina per una cosa semplice come un font)
+
+-Responsabili delle variazioni del layout: se ho spostamenti importanti devo capire il motivo
+Magari metto un placeholder, altezza e lunghezza o nei casi del carosello un display flex per evitare spostamenti marcati
+
+-Suddivisione LCP: mi parla di come posso migliorare l'LCP (uno dei parametri chiave visti sopra)
+Time to First Byte: lato server
+Ritardo del caricamento delle risorse (immagine troppo grossa)
+Durata caricamento risorse (placeholder nero-placeholder sgranato-immagine effettiva)
+Ritardo di rendering dell'elemento
+
+-codice di terze parti: lista di codice di terze parti, lo vedi e valuti se è tutto essenziale. A volte non è possibile metterci mano 
+(ad esempio prova a togliere da un ecommerce il pagamento con paypal, vedi che succede)
+Mentre posso lavorare su un video di yt: non chiamo di default il video che mi appesantisce il caricamento: metto una pic di placeholder 
+e solo al click carico il video. Anche per questo ci sono plugin ie WP youtube lyte: metti nel link non https ma httpv, ciò suggerisce a wp
+di usare il plugin (oppure con shortcode).
+
+-Minimizza JavaScript e Minimizza CSS: come nei blocchi facevamo la run build per compattare il file,mentre in test uso run dev.
+Con opportuni plugin:
+    Tutte le variabili vengono rinominate con lettere singole per massimizzare il risparmio, 
+    Compattano le andate a capo
+    Tolgono lo spazio tra le righe o uno spazio davanti una parentesi
+Entrambi valgono per Js che per CSS (wp rocket, compress, autoptimize)
+
+-Riduci il codice JavaScript e Css inutilizzato: Guthemberg lo risolve da solo, prima ogni pagina doveva caricare solo il suo css preciso.
+I blocchi caricano il loro rispettivo js o css solo s equei blocchi esistono in quella pagina specifica (grazie React)
+Per risolvere o fai un file css e js unico per ogni pagina (buona fortuna) o uso altri metodi, come guthemberg 
+
+-Evita payload di rete enormi: non mettere file troppo grandi senza motivo, come ad esempio usa un'immagine standard da pc, mentre per 
+mobile mettine una più piccola (duplica l'elemento)
+
+-Ottimizza le dimensioni del DOM: un DOM di grandi dimensioni aumenta la memoria utilizzata.
+
+-JavaScript duplicato: es ho messo la stessa risorsa con nomi diversi e carico 2 volte inutilmente uno stesso file
+
+-Carattere visualizzato: swap del font al caricamento del mio custom
+
+-Adattamento dinamico forzato del contenuto: discorso del carosello che smuove la pagina
+
+-Suddivisione INP: trovi i link che non reagiscono
+
+-Ottimizza l'area visibile per i dispositivi mobili: il metatag della responsività.
+    <meta name="viewport" content="width=device-width, initial-scale=1"> Senza questi ho il caricamento piccolissimo della pagina e devo zoomare
+    a mano 
+
+-Tempo di esecuzione JavaScript: autoesplicativo
+
+-Il lavoro del thread principale è ridotto al minimo: fasi di caricamento nel dettaglio. Se riesco a migliorare il flusso salvo ritardo 
+
+-Gli elementi immagine hanno width e height esplicite
+
+-I touch target non hanno dimensioni o spaziatura sufficienti: bottoni troppo piccoli
+
+-I link identici hanno lo stesso scopo: I link con la stessa destinazione devono avere la stessa descrizione per aiutare gli utenti a comprendere 
+lo scopo dei link e decidere se seguirli o meno
+
+-Più altri valori di best practice e parte di seo (robots.txt e informati, in particolare agents e sitemap, alcuni plugin la generano in automatico)
+
+-Cura sull'accessibilità: x dipendenti minimo e 1M di fatturato DEVI rispettare i controlli minimi dell'accessibilità 
+
+Se questi elementi sono marcati di rosso o giallo dobbiamo/possimao lavorarci, quelli verdi sono problemi superati
+

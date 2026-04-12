@@ -1,0 +1,136 @@
+Flusso di compilazione blocchi (tramite plugin):
+
+-Creo cartella contenitore generale dentro a 'plugins' (i-miei-blocchi -> blocchi)
+-Creo sottocartella del mio blocco (primo-blocco)
+-Creo file index.php (dove faccio solo l'add_action e metto il commento funzionale per wp) e sottocartella src con 
+ all'interno il file index.js (dove scrivo propriamente)
+-Compilo:
+    0- Tasto destro sulla cartella del singolo blocco -> apri in terminale integrato
+    1- npm init
+        1.1- Se non va e da errore: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+    2- Comincio a inserire i dati richiesti (nome package, eventuale descrizione, entry point deve essere il file
+        index.js, il type che propone 'commonjs' è sbagliato si può correggere direttamente dopo post compilazione
+        con 'modules')
+        2.1- Mi fa un riassunto dei dati inseriti e mi crea il package.json con file json di dipendenze annesse. 
+        Vado nel package e cambio il type in modules e alla voce scripts inserisco:
+            {"start": "wp-scripts start","build": "wp-scripts build"},
+            Per aver accesso ai comandi npm start e npm build
+    3- Installo npm install --save-dev @wordpress/scripts che mi crea la cartella node_modules
+    4- npm start per creare cartella build (ci mette del tempo a creare tutto)
+        4.1- Partentesi sugli npm:
+            -npm start: il primo che eseguo e compila i file da src/ a build/ resta in ascolto delle modifiche e 
+             ricompila automaticamente quando salvo
+            -npm run build: lo faccio per ultimo, mi serve a compattare
+    5- Comincio a scrivere nel file index.js, importando tutti i componenti necessari
+        5.1- Parentesi su block.json: lo copio da template e modifico in base alle esigenze.
+            Ad esempio per fare il blocco di prova ho copiato il block.json direttamente dal repo di andrea.
+
+
+add_filter è un invito a intercettare, modificare e restituire un dato prima che WordPress lo usi o lo salvi 
+nel database.
+add_filter('block_categories_all', 'cer_custom_block_category', 10, 1);
+plugin, my blocklibrary.php
+
+'block_categories_all': È il nome del "gancio" (hook). È il momento specifico in cui WordPress dice "Sto per creare 
+la lista delle categorie".
+
+'cer_custom_block_category': È il nome della tua funzione. WordPress la chiamerà quando arriverà a quel punto.
+
+10 (Priorità): Se ci sono più plugin che vogliono modificare la stessa cosa, chi ha il numero più basso agisce 
+per primo. 10 è lo standard.
+
+1 (Argomenti): Indica quanti dati WordPress sta passando alla tua funzione (in questo caso, solo l'array 
+$categories).
+
+!Ricorda che i shortcodes per come ho fatto il file deve stare dentro la cartella plugin di wp, altrimenti non
+riesce a ripescare le funzioni che servono
+
+
+Alcuni punti chiave da ricordare:
+-plugin_dir_url(__FILE__): È fondamentale perché crea l'URL corretto alla cartella del tuo plugin, indipendentemente 
+    da dove sia installato il sito.
+-wp_register vs wp_enqueue: Con il primo "registri" lo script (dici a WP che esiste), con il secondo lo "attivi" 
+    (dici a WP di caricarlo nella pagina). Farlo dentro lo shortcode è ottimo per le prestazioni.
+-shortcode_atts: È la funzione standard per gestire i valori predefiniti. Se l'utente scrive solo [wrap_code], 
+    la variabile $class sarà vuota invece di generare un errore.
+
+
+-Cambiare colore parte del testo, vedi logica:
+    <?php
+    /**
+    * Plugin Name: Mio Stile Gutenberg
+    * Description: Aggiunge lo stile Testo Blu ai paragrafi.
+    */
+
+    // 1. Registriamo lo stile (quello che hai scritto tu)
+    function registra_stili_personalizzati_gutenberg() {
+        register_block_style(
+            'core/paragraph',
+            array(
+                'name'       => 'testo-blu-custom',
+                'label'      => 'Testo Blu',
+                'is_default' => false,
+            )
+        );
+    }
+    add_action('init', 'registra_stili_personalizzati_gutenberg');
+
+    // 2. Carichiamo il file CSS
+    function carica_css_stile_blu() {
+        wp_enqueue_style(
+            'mio-stile-blu-css', 
+            plugin_dir_url(__FILE__) . 'stile-editor.css' // Punta al file nella stessa cartella
+        );
+    }
+    // Usiamo questo hook perché carica il CSS sia nel sito che dentro l'editor di Gutenberg
+    add_action('enqueue_block_assets', 'carica_css_stile_blu');
+
+    e css:
+    /* WordPress aggiunge la classe .is-style- seguita dal 'name' scelto nel PHP */
+        .is-style-testo-blu-custom {
+            color: #0000FF;
+            font-weight: bold;
+        }
+
+
+!Ridurre a zero margine di header e footer:
+    -Apri l'Editor del Sito (Aspetto > Editor).
+    -Seleziona il blocco Header (o il Gruppo che lo contiene).
+    -Nella barra laterale destra, vai alla scheda Stili (l'icona del cerchio metà bianco e metà nero).
+    -Cerca la sezione Dimensioni.
+    -Clicca sull'icona dei cursori accanto a "Margine" e imposta il margine Superiore a 0. 
+        Ripeti la stessa operazione per il margine Inferiore del Footer.
+oppure posso provare ad incollare del css personalizzato nel riquadro:
+    /* Rimuove lo spazio sopra l'header */
+    .wp-site-blocks {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    /* Rimuove lo spazio sotto il footer */
+    .wp-site-blocks > footer {
+        margin-bottom: 0 !important;
+    }
+
+    /* Rimuove il margine predefinito del primo e ultimo blocco */
+    body .is-layout-flow > :first-child {
+        margin-top: 0;
+    }
+    body .is-layout-flow > :last-child {
+        margin-bottom: 0;
+    }
+
+!Spaziatura tra blocchi:
+Il metodo "Locale" (Solo per un'area, altrimenti per tutto vai in Editor > Stili > Layout.)
+    -Se vuoi cambiare lo spazio solo dentro una specifica sezione:
+
+    -Inserisci i tuoi blocchi dentro un blocco Gruppo o Pila (Stack).
+
+    -Nelle impostazioni di quel Gruppo, vai su Stili > Dimensioni > Spaziatura Blocchi.
+
+    -Muovi lo slider per avvicinare o allontanare i blocchi contenuti all'interno senza 
+        influenzare il resto della pagina.
+
+Un piccolo consiglio extra: Se noti che i blocchi sono troppo vicini ai bordi dello schermo
+non usare i margini, ma aumenta il Padding (rientro interno) del blocco Gruppo. Questo 
+manterrà il colore di sfondo unito ma sposterà il testo verso l'interno.
