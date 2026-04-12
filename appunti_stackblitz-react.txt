@@ -1,0 +1,159 @@
+nel mio file index.html ho il punto di ancoraggio del mio script, da cui parte tutto
+
+il cuore dell'app sta nella cartella src:
+  nel file main.jsx ho il cuore del mio programma, dove mi crea la root con createRoot (nel div con id root 
+  all'interno dell'html). una volta ancorato va ad appendere i contenuti con la funzione render.
+
+React Bootstrap è una libreria per react con delle componenti già pronte (card, bottoni, layout, ecc)
+Parentesi risoluzione: react è smartphone first: xs è default ed è lo smartphone in verticale, s è smartphone 
+in orizzontale....xxl è il desktop. con questi prefissi gestisco la responsività.
+
+
+Testo più completo:
+
+Apro il progetto e ho dei file già esistenti:
+
+index.html che contiene struttura base (notare il metatag nell'head che mi rende il sito responsive)
+da notare che nello script entra in gioco reaact con il percorso della cartella.
+(letteralmente è solo il punto di ingresso di react)
+
+package.json sfrutta Vite per funzionare nel browser senza problemi e noto il comando nuovo per fare la
+build: vite build.
+(Vite compila, react fa funzionare l'applicazione)
+
+vite config si crea la prima volta e lo dimentichi
+
+eslint è generato in auto se uso react che da i parametri standard della nostra app (fatto la prima volta lo copio
+e incollo)
+
+package-lock come al solito mi indica le dipendenze e sottodipendenze
+
+Cartella src:
+  main.jsx è il mio js di base (in Vite il JavaScript è salvato con questa estensione)
+  importa delle funzioni da react:
+    StrictMode non è obbligatoria ma mi da dei vincoli di esecuzione e ci facilita il debug
+    createRoot dobbiamo chiamarla nell'elemento div principale dove vado a iniettare la mia interfaccia react.
+      non creo una nuova pagina ogni volta, tecnicamente siamo sempre nella stessa scheda del browser e lei
+      si aggiorna (si aggiorna solo il contenuto, ma la struttura della pagina è sempre lei.)
+      In getElementById() metto l'id del mio div (in questo caso si chiamava root), dopodichè react renderizza 
+      l'app in corrispondenza del div con id dichiarato. Renderizzo App che viene dalla stessa cartella (./App.jsx)
+      (ricorda che ./ mi indica un file nella stessa cartella, ../va indietro di una cartella)
+    
+    ! I componenti React una volta creati li posso copiare e incollare, sono riutilizzabili (al massimo cambio il css)
+  cos'è App.jsx che viene importata?
+  una funzione che ritorna un html molto semplice (preview a dx).
+    Oltre a importare css e immagini, importa anche useState da React
+  
+  ! ho spostato l' export default dal fondo sopra quando creo la funzione
+
+Uso React Bootstrap, che a differenza della libreria Hero posso scrivere html puro (da quello che ho capito).
+
+Ho fatto un fork dal progetto di Andrea, è visibile sul mio profilo (mannaggia alle dipendenze)
+Non usa Vite, ad esempio l'html è molto più compatto, ma il mio div con id=root c'è ancora. Il componente app lo mette in 
+index.js e fa anche altri import in cima (lo fa con le classi ma la logica non cambia)
+
+Ho aggiunto una componente di alert e mi da di default un colore celeste. Posso specificare la 'gravità' di un alert 
+mettendo bsStyle='nome_da_specificare'
+
+Creo la cartella 'src' con dentro la cartella 'components'
+Creo CardAuto.js dove faccio una funzione che ritorna dell'html
+Qualità di vita: nome del file=nome componente
+Lo importo nell'index.js come <CardAuto/> e basta (ritorna solo una immagine random per come ho scritto la componente).
+In base a dove lo posiziono si dispone l'immagine (fixa anche le dimensioni della pic nel file del componente)
+
+
+!Riassumendo: creo un componente che ritorna un immagine (ritorna solo un componente, quindi se ne avessi più di 
+uno li butto dentro il tag vuoto)
+
+
+!Usa className per dare le classi, React vuole cosi
+
+Siamo adesso dentro un fork che usa la versione più aggiornata di bootstrap
+
+!Trovo le componenti disponibili in https://react-bootstrap.netlify.app/docs/components/accordion
+
+!Bootstrap ragiona con una responsività 'Smartphone First' quindi se non assegno nessuna grandezza di dispositivo 
+considera automaticamente xs, per gli altri dispositivi devo sempre specificare
+Inoltre se esiste una classe, molto probabilmente esisterà per tutti i dispositivi mettendo gli appositi suffissi 
+(ad esempio posso avere un testo bold per smartphone ma testo normale in pc)
+
+https://react-icons.github.io/react-icons/
+Libreria di icone
+
+In React non esistono variabili, lavora per Stati (ie aula occupata o libera: sono 2 stati diversi. Non posso usare 
+una variabile ed asssegnarle un booleano. Discorso di aggiornamento dei componenti che se uso gli stati al posto di
+ variabili React lavora automaticamente)
+
+Ora faccio un bottone acceso-spento con un cuoricino per un ipotetico salvataggio nei preferiti
+
+!Lo stato si gestisce con una costante (nome variabile, funzione che modifica il valore)
+const [inWishlist, setInWishlist]= useState(0); useState mi capisce che deve ricordare gli stati
+
+const handleClick = function(){
+    setInWishlist(!inWishlist);
+  }
+Mi scambia il vero/falso (assegno una funzione ad una costante, react fa cosi)
+
+export default function WishlistButton({className = '', heartColor = ''}) 
+Do come argomento della funzione wishlist un oggetto {parametro1, parametro2,...}
+Nel return aggiungo un paio di classi:
+return <span onClick={handleClick} className={className} style={{color: heartColor}}>
+    {(inWishlist)?<FaHeart />:<FaRegHeart />}
+    </span>;
+e metto in CardAuto: <WishlistButton heartColor="#FF0000" /> come valore base (e nella funzione in WishlistButton metto gli 
+stessi parametri come facoltativi: in questo modo non mi da il warning dei parametri mancanti non specificati)
+
+https://my-json-server.typicode.com/ per simulare un db, preso dal repo di andrea tra quelli stellati
+
+https://reqbin.com/ per testare le api
+
+faccio una cartella services dove avrò dei file dedicate alle chiamate api.
+il file sarà un js puro, non jsx
+fetch è un metodo che mi permette di fare le chiamate e restituisce stringhe, per convertirlo faccio il ritorno response.json(); 
+che me lo converte
+il server può metterci del tempo prima di rispondere quindi devo aspettare finchè non risponde la chiamata; uso una chiamata 
+asincrona e lo faccio in pratica mettendo 'await' prima di fetch. in questo modo metto in pausa solo la chiamata coinvolta e 
+carico comunque il resto (anche la chiamata json è asincrona, quindi metto await pure li. non ha troppo senso logico ma si fa 
+cosi).
+per sapere se la risposta è avvenuta scrivo if (response.ok), oppure posso lanciare un errore se qualcosa va storto
+
+all'interno dell'import posso dare un alias alla funzione chiamata (utile nel caso abbia più get)
+
+all'interno di useEffect l'array con le quadre alla fine serve per eseguirlo una sola volta, subito dopo il montaggio del 
+componente (quando appare sullo schermo).
+
+il metodo map è tipo un foreach, documenta
+
+lo stato si cambia solo se lo modifico con il set, altrimenti è persistente (aspetto tipico di react)
+
+gli hook non li facciamo ma sono un gancio tra app ed api, è un ulteriore livello di astrazione
+
+guarda un attimo l'operatore ternario
+
+riguardante i parametri del link, parto col punto di domanda e dopidiché uso la e commerciale '&'
+
+nella useEffect in listaAuto ho passato il parametro auto alla fine, se non lo faccio la mia chiamata api parte solo quando carico 
+la prima volta, invece passando il parametro se ho lo stesso anno non rifa la chiamata, se l'anno cambia invece rigenera i componenti
+
+
+CER - 2026 | Frontend | React con Vite ..... 
+
+nella cartella pages ho il componente completo (ie la pagina delle auto)
+
+aggiunto a package.json "react-router-dom": "^7.5.3" tra le dipendenze
+
+ogni rotta ha 2 attributi: 
+
+il discorso delle rotte mi è utile per un login: se ho le credenziali giuste (rotta giusta) loggo, altrimenti mi sbuca ad esempio 
+la pagina di login o una rotta diversa
+
+ProtectedRoute(children): se sono loggato mi mostri i contenuti figli, altrimenti ti mostro altro
+
+nella pagina login.jsx ho preso tutto paro paro da Form controls dalla libreria di bootsrap
+
+nella protected route metto return <Navigate to="/login" replace />; to->pagina dove dovrò essere reindirizzato, replace serve 
+per scartare tutte le istruzioni (?) precedenti
+
+per fare un login invio nome utente e pw, mi genero un token che salvo in locale nel browser dell'utente. Il processo di logout 
+si basa semplicemente sul cancellare quel token, cosi da essere reindirizzato alla pagina di login
+  
