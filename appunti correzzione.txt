@@ -1,0 +1,145 @@
+recap:
+
+Parte 1:
+
+modo piu moderno?
+sicuro hanno specificato molto, dobbiamo dare una vetrina ai prodotti e alla loro gestione
+
+esempio di andrea: chiedi al cliente quali domande gli fanno piu spesso, così magari i clienti raccolgono piu info dal sito e allegeriscono
+il carico al contatto del telefono (piu info dai, meno dura la chiamata o piu breve è lo scambio di mail)
+
+se un azienda non ha un astruttura fissa del sito, possiamo essere piu flessibili e fare noi proposte
+altro esempio: mettere bottone 'cerca rivenditore piu vicino a te' se ad esempio un azienda non vende a privato ma solo tramite rivenditori
+
+parte dei clienti: privati e rivenditori(ecommerce, oppure altro esempio da andrea: mi rivolgo a giovani e faccio stile giocoso, adulti tono piu serioso,
+over 60 faccio un font molto piu grande), come farlo? non posso fare stesso prezzo per entrambi, devo differenziare e predisporre un sistema dedicato
+ai rivenditori (ie sezione dedicata a loro che poi porta ad una landing page post registrazione da rivenditore. lo metto in home, nella scheda prodotto 
+o vedi te). Se non è ecommerce la questione cambia: o mi baso con rivenditori o mi faccio contattare e valuto io il prezzo o consiglio unrivenditore 
+affiliato piu vicino
+
+funzionalità:in genere la gente non sa cos'è un modulo di contatto o sezione news, ma noi si: solitamente rispondono che non ne sanno nulla.
+ad esempio il modulo di contatto lo mettiamo sempre a meno che non ci sia un motivo fornito da loro: magari vogliono solo whatsapp o vogliono
+cedere tutto ai rivenditori (ma controproducente: se un cliente ha un problema rischio di perdere il cliente se non ha modo di contattarmi)
+il modulo di contatto fa la stessa cosa della mail ma dando la libertà al cliente di usare il client che preferisce (gmail, outlook, thunderbird)
+poi quali dati devo mettere nel modulo di contatto? devo richiedere quelli strettamente necessari: perchè chiedi la data di nascita? perchè chiedi il 
+telefono? valuta cosa inserire.
+
+'si una newsletter è comoda ma fate voi', tradotto: so che esistono le newsletter ma non so cosa farmene. Le newsletter hanno un tasso di conversione 
+molto alto, se li raccogliamo è meglio sfruttarli e non solo proporre il sito ma proporre anche un piano editoriale: chi la fa, ogni quando la mandi,
+chi la segue, ecc, magari proponi un piano editoriale e cosi via.
+
+di solito non chiedere che colori gli piacciono, chiedi magari siti da prendere spunto: è più facile. Non chiedere i colori: chiedi il logo e poi 
+fai te.
+
+Il sito internet è loro, deve rappresentarli. Capita sentirsi dire: 'bello ma cupo o bello ma infantile o bello ma troppo freddo'
+
+Se mi consiglia u nsito di un concorrente, devo vedere quali funzionalità in più offre, non li uso per il punto di vista grafico
+
+La penultima domanda implica un sito che deve essere soggetto a modifiche. (usare un cms, non un sito statico)
+
+Una parte non indifferente della realizzazione del sito è reperire i materiali: se non mi dai i contenuti io non posso lavorare. Questo fa slittare 
+la data di inizio (e di conseguenza la data di termine) del sito 
+=> faccio fino alla bozza grafica, me lo faccio pagare e poi sta tutto in mano al cliente: finchè non fornisce i materiali io non inizio, ma non mi
+interessa. anche se il cliente ha cambiato idea io ho comunque il mio lavoro già pagato.
+
+Esempio: il modulo di informazioni si può anche mettere direttamente sul prodotto. Ultima domanda: ecommerce oppure no, l'uso di cms, e cosi via.
+
+
+Parte 2:
+
+ricorda il show_in_rest e has_archive
+taxonomies:('categoria-camera') e la scrivo register(categoria-camera, camera, array). Hierarchical dipende se voglio una categoria o un tag
+show_ui e show_in_nav_menu devono essere true (di base lo sono di default)
+
+esempio di andrea: al posto di fare una funzione e una add_action posso fare direttamente una add_action e passargli una funzione.
+add_action('init', function(){
+    register(servizi, $args)
+});
+
+lo metto o in fondo al tema, oppure con Local:
+Pulsante wp-admin si apre il sito, oppure pulsante cartella. clicco su cartella per scrivere il codice in fondo a functions del tema.
+oppure direttamente da wp: Strumenti -> Editor del tema (è un editor di testo che mi fa lavorare su ltema: a dx trovo i file su cui lavorare)
+occhio a lavorare direttamente da wp che se sbagli salta il sito. Passo da local e clicco il pulsante site folder e lo modifico da li.
+
+Predisporre i dati è intro alla parte successiva.
+
+
+Parte 3
+
+carica un paio di pagine farlocche (alcuni prodotti ie)
+
+Per fare i template, posso farli anche lato php:
+devo creare un file archive-prodotti.php all'interno della cartella del tema.
+
+L'attenzione principale è se usi un tema standard o a blocchi
+il modo standard è realizzare un html con tutti gli elementi necessari e lo racchiudo con get_header e get_footer (non importano solo head e foot
+ma head apre il tag body, mentre foot lo racchiude)
+Consiglio di andrea: copia il template dell'archivio e poi modifica come ti interessa.
+
+ricordati GPLDL per 'piratare' i temi (satira si scherza signori della postale, è tutta colpa della licenza)
+
+posso copia-incollare i template (shift giu e clicco, copio e poi incollo nel template nuovo dentro ad un blocco paragrafo)
+
+
+Blocchi Fondamentalui:
+
+Archivio:
+per il link dell'articolo, vai nella voce prodotti creata con la register, poi fai vedi pagina o come si chiama nel menu orizzontale in alto,
+non c'è bisogno di smadonnare ad indovinare i link.
+-header 
+-contenuto centrale:
+    -titolo archivio
+    -query loop: predefinito se sono sull'archivio, perchè dovrebbe pescarli automaticamente da solo (oppure personalizzato ->prodotti). 
+    ma basta che funzioni. Come flusso di lavoro, è meglio creare prima il template dei prodotti e qualche prodotto farlocco-segnaposto per 
+    facilitare la visualizzazione nella realizzazione dell'archivio
+    -scopri di piu (se hai tempo)
+-footer
+
+Parentesi responsività: se metto griglia, da mobile vedo uno sotto l'altro.
+
+Articolo:
+-header
+-contenuto centrale:
+    -(Categoria nostra: la metto prima se sono nell'archivio, lo metto dopo il titolo ad esempio se sono nel prodotto)
+    -Titolo del contenuto
+    -(Data se vuoi nell'archivio)
+    -Immagine in evidenza (da mettere in alto nell'articolo). Posso usare anche il blocco copertina e cliccare imposta immagine in evidenza.
+    Sono dei piccoli accorgimenti, valuta a casa un modello di layout.
+    formato dell'immagine a sinistra.
+    -Contenuto (o Riassunto se sono nel template dell'archivio)
+-footer
+
+Se hai tempo 'cura la palette' per vedere che è emerso qualcosa di piu dall'intervista. 
+
+
+home (query loop personalizzato oppure se c'è scritto selezione di prodotti posso fare una selezione di prodotti a mano) e archivio, lunghezza
+-presentazione azienda: 2 colonne, con una foto e del testo (titolo con paragrafo)
+sotto sezione dedicata al team. (immagine, nome, ruolo)
+-Responsività: verifica che se usi griglie o righe venga visualizzato stacked da mobile (uno sotto l'altro) e permetti di racchiudere righe multiple
+    Le colonne vanno a capo uno sotto l'altro in auto, le righe no a meno che non metti la cosa delle righe multiple.
+-Selezione di prodotti: query loop personalizzato -> prodotti. Se chiedono 3 prodotti specifici, costruisco la card completa a mano.
+    -Col query loop è piu automatizzato. Se l'ho gia fatto dall'archivio, copio il loop e devo stare attento al tipo di query ed eventualmente
+    a quanti prodotti voglio mostrare, magari nell'archivio metto 12 e nella home 3 ad esempio.
+
+impostazioni di lettura-> scelgo una mia pagina come home se ho creato una roba statica, ma posso farlo anche da template: l'importante è che se 
+clicco home oppure clicco il titolo mi porti alla home che ho modificato.
+
+Controlla il sito anche da mobile con 'ispeziona'
+
+!!!!!!!!
+Apri la tendina della struttura di pagina a sx, espandi i blocchi, 3 puntini in alto a dx, trasmetti, salva e condividi, salva elemento singolo.
+!!!!!!!!
+
+
+
+Esercizio 4:
+magari fai anche riferimento ai primi 3 parametri, in particolare  lcp e cls quando descrivi i problemi, non partire direttamente con le 
+criticità sotto.
+le metriche sopra sono problemi reali da vari dispositivi mobili, sotto sono i problemi approfonditi.
+dopo che andrea ha spiegato va bene anche i due esempi presi sotto come avevo fatto nella prova.
+Ricorda i font swap.
+12 ore di cache è poco, una settimana, due, un mese, vedi. (wp fastest cache).
+Per vedere se un file/codice viene da un plugin o tema, lo apro e vedo sopra cosa ho scritto.
+
+
+Un tema standard possiede un css pieno, un tema a blocchi ce l'ha vuoto: ogni blocco ha il suo.
